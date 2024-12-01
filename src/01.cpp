@@ -19,12 +19,12 @@ void read_input(std::vector<int>& left, std::vector<int>& right)
     }
 }
 
-auto part_one(std::vector<int>& left, std::vector<int>& right)
+auto part1(std::vector<int>& left, std::vector<int>& right)
 {
     std::sort(left.begin(), left.end());
     std::sort(right.begin(), right.end());
 
-    std::size_t distance{0ul};
+    auto distance{0ul};
     for (size_t i = 0; i < left.size(); ++i) {
         distance += std::abs(left[i] - right[i]);
     }
@@ -32,14 +32,14 @@ auto part_one(std::vector<int>& left, std::vector<int>& right)
     return distance;
 }
 
-auto part_two(const std::vector<int>& left, const std::vector<int>& right)
+auto part2(const std::vector<int>& left, const std::vector<int>& right)
 {
     std::unordered_map<int, int64_t> right_counts;
     for (int num : right) {
         ++right_counts[num];
     }
 
-    std::size_t similarity{0ul};
+    auto similarity{0ul};
     for (int num : left) {
         similarity += num * right_counts[num];
     }
@@ -52,18 +52,18 @@ int main()
     std::vector<int> left, right;
     read_input(left, right);
 
-    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+    auto begin{std::chrono::steady_clock::now()};
 
-    auto dist{part_one(left, right)};
+    auto dist{part1(left, right)};
 
-    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+    auto end{std::chrono::steady_clock::now()};
     std::println("Total distance: {} | time = {}us",
                  dist,
                  std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
 
     begin = std::chrono::steady_clock::now();
 
-    auto similarity{part_two(left, right)};
+    auto similarity{part2(left, right)};
 
     end = std::chrono::steady_clock::now();
     std::println("Similarity: {} | time = {}us",
