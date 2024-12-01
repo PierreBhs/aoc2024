@@ -39,12 +39,12 @@ auto part_two(const std::vector<int>& left, const std::vector<int>& right)
         ++right_counts[num];
     }
 
-    std::size_t similarity_score{0ul};
+    std::size_t similarity{0ul};
     for (int num : left) {
-        similarity_score += num * right_counts[num];
+        similarity += num * right_counts[num];
     }
 
-    return similarity_score;
+    return similarity;
 }
 
 int main()
