@@ -9,7 +9,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wno-missing-field-initializers -O3)
 
 add_executable(${PROJECT_NAME}
-                ${CMAKE_SOURCE_DIR}/src/01.cpp
+                # ${CMAKE_SOURCE_DIR}/src/01.cpp
+                ${CMAKE_SOURCE_DIR}/src/02.cpp
 )
 
 execute_process(
