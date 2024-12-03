@@ -20,8 +20,8 @@ auto mult(std::string_view str)
 {
     int  a{}, b{};
     auto comma_pos{str.find(',')};
-    (void)std::from_chars(str.data(), str.data() + comma_pos, a);
-    (void)std::from_chars(str.data() + comma_pos + 1, str.data() + str.size(), b);
+    std::from_chars(str.data(), str.data() + comma_pos, a);
+    std::from_chars(str.data() + ++comma_pos, str.data() + str.size(), b);
     return a * b;
 }
 
@@ -30,10 +30,10 @@ auto part1(const std::string& input)
 
     const std::regex regex("mul\\(\\d+,\\d+\\)");
     std::smatch      match;
-    auto             start{input.cbegin()}, end{input.cend()};
+    auto             start{input.cbegin()};
 
     auto sum{0};
-    while (std::regex_search(start, end, match, regex)) {
+    while (std::regex_search(start, input.cend(), match, regex)) {
         sum += mult((match[0].str().c_str() + 4));
         start = match.suffix().first;
     }
@@ -80,20 +80,19 @@ auto part2(const std::string& input)
 
     const std::regex regex("mul\\(\\d+,\\d+\\)|do\\(\\)|don\\'t\\(\\)");
     std::smatch      match;
-    auto             start{input.cbegin()}, end{input.cend()};
+    auto             start{input.cbegin()};
 
     auto sum{0};
     auto todo{true};
-    while (std::regex_search(start, end, match, regex)) {
+    while (std::regex_search(start, input.cend(), match, regex)) {
         if (match[0].str() == "do()") {
             todo = true;
         } else if (match[0].str() == "don't()") {
             todo = false;
-        }
-
-        if (todo) {
+        } else if (todo) {
             sum += mult(match[0].str().c_str() + 4);
         }
+
         start = match.suffix().first;
     }
 
@@ -107,18 +106,11 @@ auto part2_no_regex(const std::string& input)
         if ((i = input.find("mul(", i)) == std::string::npos) {
             break;
         }
+
         auto do_pos{input.rfind("do()", i)};
         auto dont_pos{input.rfind("don't()", i)};
 
-        if (do_pos == std::string::npos) {
-            do_pos = dont_pos - 1;
-        }
-        if (dont_pos == std::string::npos) {
-            dont_pos = do_pos - 1;
-        }
-
-        auto do_dist{std::abs(static_cast<std::int32_t>(i - do_pos))},
-            dont_dist{std::abs(static_cast<std::int32_t>(i - dont_pos))};
+        auto do_dist{static_cast<std::int32_t>(i - do_pos)}, dont_dist{static_cast<std::int32_t>(i - dont_pos)};
         auto do_dist_min = (std::min(do_dist, dont_dist) == do_dist) ? true : false;
 
         i += 4;
@@ -129,7 +121,7 @@ auto part2_no_regex(const std::string& input)
         }
 
         std::string substr{""};
-        bool        do_mult = true;
+        bool        do_mult{true};
         while (input[i] != ')') {
             if (check_valid(input[i])) {
                 substr += input[i];
