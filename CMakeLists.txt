@@ -10,7 +10,8 @@ add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wno-missing-field-initiali
 
 add_executable(${PROJECT_NAME}
                 # ${CMAKE_SOURCE_DIR}/src/01.cpp
-                ${CMAKE_SOURCE_DIR}/src/02.cpp
+                # ${CMAKE_SOURCE_DIR}/src/02.cpp
+                ${CMAKE_SOURCE_DIR}/src/03.cpp
 )
 
 execute_process(
