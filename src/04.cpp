@@ -14,11 +14,11 @@ constexpr auto build_vertical_string = [](int i, int j, const std::vector<std::s
 };
 
 constexpr auto build_diagonal_string =
-    [](int i, int j, const std::vector<std::string>& grid, int delta_row, int delta_col) -> std::string {
-    return std::string{grid[i][j],
-                       grid[i + delta_row][j + delta_col],
-                       grid[i + 2 * delta_row][j + 2 * delta_col],
-                       grid[i + 3 * delta_row][j + 3 * delta_col]};
+    [](int row, int col, const std::vector<std::string>& grid, int delta_row, int delta_col) -> std::string {
+    return std::string{grid[row][col],
+                       grid[row + delta_row][col + delta_col],
+                       grid[row + 2 * delta_row][col + 2 * delta_col],
+                       grid[row + 3 * delta_row][col + 3 * delta_col]};
 };
 
 auto check_pattern(std::size_t i, std::size_t j, const std::vector<std::string>& input)
@@ -40,9 +40,9 @@ auto check_pattern(std::size_t i, std::size_t j, const std::vector<std::string>&
     }
 
     // Diagonals
-    auto is_valid_position = [&](int i, int j, int delta_row, int delta_col) -> bool {
-        return (i + 3 * delta_row) >= 0 && (i + 3 * delta_row) < static_cast<int>(v_size) && (j + 3 * delta_col) >= 0 &&
-               (j + 3 * delta_col) < static_cast<int>(h_size);
+    auto is_valid_position = [&](int row, int col, int delta_row, int delta_col) -> bool {
+        return (row + 3 * delta_row) >= 0 && (row + 3 * delta_row) < static_cast<int>(v_size) &&
+               (col + 3 * delta_col) >= 0 && (col + 3 * delta_col) < static_cast<int>(h_size);
     };
 
     if (is_valid_position(i, j, 1, 1)) {
@@ -82,9 +82,9 @@ struct Direction
 
 auto check_pattern_in_direction(int i, int j, const std::vector<std::string>& input, const Direction& dir)
 {
-    const int v_size = input.size();
-    const int h_size = input[0].size();
-    const int pattern_length = pattern.size();
+    const int     v_size = input.size();
+    const int     h_size = input[0].size();
+    constexpr int pattern_length = pattern.size();
 
     for (auto k{0}; k < pattern_length; ++k) {
         auto ni{i + dir.delta_row * k};
