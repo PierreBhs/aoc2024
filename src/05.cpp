@@ -1,8 +1,10 @@
 #include <algorithm>
 #include <charconv>
+#include <chrono>
 #include <fstream>
 #include <iterator>
 #include <locale>
+#include <print>
 #include <ranges>
 #include <sstream>
 #include <string>
@@ -82,16 +84,8 @@ auto part1(const std::unordered_map<int, std::vector<int>>& rules, const std::ve
 
 auto reorder_update(const std::unordered_map<int, std::vector<int>>& rules, std::vector<int> update)
 {
-    std::ranges::sort(update, [&rules](int a, int b) {
-        if (std::ranges::find(rules.at(a), b) != rules.at(a).end()) {
-            return true;
-        }
-        if (std::ranges::find(rules.at(b), a) != rules.at(b).end()) {
-            return false;
-        }
-        // numeric order otherwise
-        return a < b;
-    });
+    std::ranges::sort(update,
+                      [&rules](int a, int b) { return std::ranges::find(rules.at(a), b) != rules.at(a).end(); });
     return update;
 }
 
@@ -112,17 +106,20 @@ int main()
     auto [page_rules, updates]{read_input()};
 
     auto begin{std::chrono::steady_clock::now()};
+    auto p1{part1(page_rules, updates)};
+    auto end{std::chrono::steady_clock::now()};
+
     std::println(
-        "sum: {} | time = {}us",
-        part1(page_rules, updates),
-        std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - begin).count());
+        "sum: {} | time = {}us", p1, std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
 
     begin = std::chrono::steady_clock::now();
-    std::println(
-        "sum reordered: {} | time = {}us",
-        part2(page_rules, updates),
-        std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - begin).count());
+    auto p2{part2(page_rules, updates)};
+    end = std::chrono::steady_clock::now();
+
+    std::println("sum reordered: {} | time = {}us",
+                 p2,
+                 std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
 }
 
-// sum: 7198 | time = 41us
-// sum reordered: 4230 | time = 193us
+// sum: 7198 | time = 25us
+// sum reordered: 4230 | time = 105us
