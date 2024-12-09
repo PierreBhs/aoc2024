@@ -13,7 +13,7 @@ auto read_input()
     std::string   line;
     map_t         input;
     while (std::getline(input_file, line) && !line.empty()) {
-        input.emplace_back(line);
+        input.emplace_back(std::move(line));
     }
 
     return input;
